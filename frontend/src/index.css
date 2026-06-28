@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ===== Placera dark design tokens (HSL channels) ===== */
+    --background: 240 10% 4%;
+    --foreground: 0 0% 98%;
+
+    --surface: 240 8% 8%;
+    --surface-2: 240 7% 12%;
+
+    --border: 240 6% 18%;
+    --input: 240 6% 16%;
+    --ring: 258 90% 66%;
+
+    --primary: 258 90% 66%;
+    --primary-foreground: 0 0% 100%;
+    --primary-2: 190 95% 55%;
+
+    --muted: 240 7% 14%;
+    --muted-foreground: 240 5% 64%;
+
+    --success: 152 69% 46%;
+    --warning: 38 92% 58%;
+    --danger: 0 84% 62%;
+
+    --radius: 0.875rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+  }
+
+  /* Slim, themed scrollbars */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.4);
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  /* Glassmorphic surface */
+  .glass {
+    @apply bg-surface/60 backdrop-blur-xl border border-white/[0.06] shadow-glass;
+  }
+  .glass-2 {
+    @apply bg-surface-2/70 backdrop-blur-xl border border-white/[0.07];
+  }
+
+  /* Brand gradient text */
+  .text-gradient {
+    @apply bg-gradient-brand bg-clip-text text-transparent;
+  }
+
+  /* Hairline divider */
+  .hairline {
+    @apply border-white/[0.06];
+  }
+
+  /* Focus ring */
+  .focus-ring {
+    @apply outline-none ring-offset-2 ring-offset-background focus-visible:ring-2 focus-visible:ring-ring;
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, hsl(var(--border) / 0.4) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.4) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

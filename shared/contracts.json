@@ -1,0 +1,26 @@
+{
+  "$comment": "Single source of truth for enum string values shared across backend and frontend.",
+  "roles": ["student", "recruiter", "admin"],
+  "userStatus": ["active", "pending", "suspended", "banned"],
+  "jobType": ["internship", "full_time", "part_time", "contract"],
+  "workplace": ["remote", "onsite", "hybrid"],
+  "jobStatus": ["draft", "pending_moderation", "published", "closed", "rejected"],
+  "applicationStage": ["applied", "screening", "interview", "offer", "hired", "rejected"],
+  "applicationStatus": ["active", "withdrawn", "rejected", "hired"],
+  "approvalStatus": ["pending", "approved", "rejected"],
+  "interviewType": ["screening", "technical", "hr", "managerial"],
+  "interviewStatus": ["scheduled", "completed", "cancelled", "no_show"],
+  "api": {
+    "version": "v1",
+    "prefix": "/api/v1",
+    "wsPath": "/ws",
+    "errorEnvelope": { "error": { "code": "string", "message": "string", "details": {} } }
+  },
+  "events": [
+    "connection.ready",
+    "notification.new",
+    "application.created",
+    "application.stage_changed",
+    "presence.update"
+  ]
+}
