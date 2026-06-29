@@ -4,7 +4,33 @@
 
 @layer base {
   :root {
-    /* ===== Placera dark design tokens (HSL channels) ===== */
+    /* ===== Placera LIGHT design tokens (HSL channels) ===== */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 8%;
+
+    --surface: 240 33% 99%;
+    --surface-2: 240 20% 96%;
+
+    --border: 240 10% 88%;
+    --input: 240 12% 90%;
+    --ring: 258 90% 60%;
+
+    --primary: 258 90% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-2: 190 95% 42%;
+
+    --muted: 240 16% 95%;
+    --muted-foreground: 240 6% 42%;
+
+    --success: 152 60% 40%;
+    --warning: 38 92% 48%;
+    --danger: 0 75% 52%;
+
+    --radius: 0.875rem;
+  }
+
+  .dark {
+    /* ===== Placera DARK design tokens (HSL channels) ===== */
     --background: 240 10% 4%;
     --foreground: 0 0% 98%;
 
@@ -31,6 +57,18 @@
 
   * {
     @apply border-border;
+  }
+
+  /* Smooth, theme-aware transitions for color/background/border changes. */
+  *,
+  *::before,
+  *::after {
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.2s ease,
+      fill 0.3s ease,
+      stroke 0.3s ease;
   }
 
   html {

@@ -4,7 +4,7 @@
 #   cp frontend/.env.example frontend/.env
 #   docker compose up --build
 #
-# Web (dev): http://localhost:5173   API: http://localhost:8000/docs
+# Web (dev): http://localhost:5173   API health: http://localhost:8000/health
 
 services:
   mongo:
@@ -41,8 +41,10 @@ services:
       - ./backend/.env
     environment:
       MONGODB_URI: mongodb://mongo:27017
+      MONGODB_DB: placera
       REDIS_URL: redis://redis:6379/0
       CORS_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+      PORT: "8000"
     ports:
       - "8000:8000"
     depends_on:
@@ -50,9 +52,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    # Dev-friendly: hot reload. Remove for production (Dockerfile CMD uses gunicorn).
-    command: >
-      uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    # Node.js + Express entrypoint. For local hot-reload use `npm run dev`.
+    command: node server.js
 
   web:
     build:
