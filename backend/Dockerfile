@@ -1,23 +1,18 @@
-# ---- Placera API image ----
-FROM python:3.11-slim AS base
+# ---- Placera API image (Node.js + Express) ----
+FROM node:20-alpine AS base
 
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1
+ENV NODE_ENV=production
 
 WORKDIR /app
 
-# System deps for bcrypt/cryptography wheels
-RUN apt-get update && apt-get install -y --no-install-recommends gcc \
-    && rm -rf /var/lib/apt/lists/*
+# Install production dependencies first for better layer caching
+COPY package*.json ./
+RUN npm install --omit=dev && npm cache clean --force
 
-COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
-
+# Copy application source
 COPY . .
 
 EXPOSE 8000
 
-# Production: gunicorn with uvicorn workers. Override for dev with --reload.
-CMD ["gunicorn", "app.main:app", "-k", "uvicorn.workers.UvicornWorker", \
-     "-w", "4", "--bind", "0.0.0.0:8000", "--access-logfile", "-"]
+# Production start. Override with `npm run dev` for hot reload in development.
+CMD ["node", "server.js"]

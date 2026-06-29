@@ -42,6 +42,11 @@ coverage/
 frontend/dist/
 frontend/dev-dist/
 
+# ---------- Backend (Node.js) ----------
+# Runtime-uploaded files staged locally (keep the directory, ignore contents)
+backend/src/uploads/*
+!backend/src/uploads/.gitkeep
+
 # ---------- Logs ----------
 *.log
 npm-debug.log*
