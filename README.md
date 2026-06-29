@@ -51,45 +51,71 @@ placera/
 
 **Frontend** — React, Vite, TypeScript, TailwindCSS, Framer Motion, Zustand, TanStack Query, React Hook Form, shadcn/ui, Recharts, PWA.
 
-**Backend** — Python 3.11+, FastAPI, Motor (async MongoDB), Redis, JWT auth, Role-Based Access Control, WebSockets, Pydantic v2, repository + service pattern, API versioning (`/api/v1`).
+**Backend** — Python 3.12, FastAPI, Motor (async MongoDB), JWT auth, Role-Based Access Control, WebSockets, Pydantic v2, repository + service pattern, API versioning (`/api/v1`).
 
-**Data & Infra** — MongoDB Atlas, Redis, Cloudinary (file storage), Docker, GitHub Actions CI.
+**Database** — MongoDB (local or MongoDB Atlas). No Redis, no Docker required.
+
+> File storage (resume uploads) uses a local stub by default and works out of the box. Set the optional `CLOUDINARY_*` keys in `backend/.env` only if you want real cloud uploads.
 
 ## Quick Start
 
-> **Prerequisites:** Node 20+, Python 3.11+, and either Docker or local MongoDB + Redis.
+> **Prerequisites:** **Node 20+**, **Python 3.12** (recommended for best wheel compatibility), and a **MongoDB** database — either local or a free [MongoDB Atlas](https://www.mongodb.com/atlas) cluster.
 
-### Option A — Docker (recommended)
+You need **two terminals**: one for the backend, one for the frontend.
 
-```bash
-cp backend/.env.example backend/.env
-cp frontend/.env.example frontend/.env
-docker compose up --build
-# Web → http://localhost:5173    API → http://localhost:8000/docs
-```
-
-### Option B — Run services individually
+### 1. Backend (Terminal 1)
 
 ```bash
-# Backend
 cd backend
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env            # fill in Mongo/Redis/Cloudinary/JWT secrets
-uvicorn app.main:app --reload --port 8000
+python -m venv .venv
 
-# Frontend (new terminal)
-cd frontend
-npm install
-cp .env.example .env
-npm run dev
+# activate the venv:
+#   macOS/Linux:  source .venv/bin/activate
+#   Windows PS:   .venv\Scripts\Activate.ps1
+
+pip install -r requirements.txt
+cp .env.example .env          # Windows: copy .env.example .env
 ```
 
-Seed demo data (students, recruiters, jobs):
+Edit `backend/.env` and set your MongoDB connection:
+
+```
+MONGODB_URI=mongodb://localhost:27017                              # local
+# or Atlas (URL-encode special chars in the password, @ -> %40):
+# MONGODB_URI=mongodb+srv://user:pass%40123@cluster0.xxxxx.mongodb.net
+MONGODB_DB=placera
+```
+
+Run the API:
+
+```bash
+uvicorn app.main:app --reload --port 8000
+# API + Swagger docs → http://localhost:8000/docs
+```
+
+Seed demo accounts + jobs (optional, second terminal with venv active):
 
 ```bash
 cd backend && python -m app.scripts.seed
 ```
+
+### 2. Frontend (Terminal 2)
+
+```bash
+cd frontend
+npm install
+cp .env.example .env          # Windows: copy .env.example .env
+npm run dev
+# Web app → http://localhost:5173
+```
+
+### Demo logins (after seeding)
+
+| Role | Email | Password |
+|------|-------|----------|
+| Student | `ada@uni.edu` | `Student@123` |
+| Recruiter | `recruiter@acme.ai` | `Recruiter@123` |
+| Admin | `admin@placera.io` | `Admin@12345` |
 
 ## Documentation
 
@@ -101,7 +127,6 @@ cd backend && python -m app.scripts.seed
 | [API Design](docs/API_DESIGN.md) | REST surface, versioning, conventions |
 | [Auth Flow](docs/AUTH_FLOW.md) | JWT access/refresh + RBAC |
 | [Component Hierarchy](docs/COMPONENT_HIERARCHY.md) | Frontend UI tree & design tokens |
-| [Deployment](docs/DEPLOYMENT.md) | Docker, CI, hosting topology |
 
 ## License
 

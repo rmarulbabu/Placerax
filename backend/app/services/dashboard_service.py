@@ -1,7 +1,7 @@
 """Dashboard aggregation for each role. Cached per user/role."""
 from __future__ import annotations
 
-from app.core.redis import Cache
+from app.core.cache import Cache
 from app.models.enums import ApprovalStatus, JobStatus, UserStatus
 from app.repositories.application_repo import ApplicationRepository
 from app.repositories.company_repo import CompanyRepository

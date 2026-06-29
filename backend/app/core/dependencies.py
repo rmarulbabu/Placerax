@@ -13,7 +13,7 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 
 from app.core.database import get_database
 from app.core.exceptions import ForbiddenError, UnauthorizedError
-from app.core.redis import Cache
+from app.core.cache import Cache
 from app.core.security import ACCESS, decode_token
 from app.models.enums import Role, UserStatus
 from app.models.user import User

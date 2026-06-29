@@ -31,10 +31,7 @@ class Settings(BaseSettings):
     MONGODB_URI: str = "mongodb://localhost:27017"
     MONGODB_DB: str = "placera"
 
-    # ---- Redis ----
-    REDIS_URL: str = "redis://localhost:6379/0"
-
-    # ---- Cloudinary ----
+    # ---- Cloudinary (optional — falls back to a local stub when unset) ----
     CLOUDINARY_CLOUD_NAME: str = ""
     CLOUDINARY_API_KEY: str = ""
     CLOUDINARY_API_SECRET: str = ""

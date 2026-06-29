@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from app.core.exceptions import ForbiddenError, NotFoundError, ValidationError
-from app.core.redis import Cache
+from app.core.cache import Cache
 from app.core.utils import unique_slug
 from app.models.enums import ApprovalStatus, JobStatus
 from app.models.job import Job

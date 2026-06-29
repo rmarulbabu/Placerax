@@ -16,8 +16,6 @@ from app.core.database import (
 )
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import configure_logging
-from app.core.redis import close_redis_connection, connect_to_redis, get_redis
-from app.websockets.manager import connection_manager
 from app.websockets.routes import router as ws_router
 
 
@@ -25,11 +23,7 @@ from app.websockets.routes import router as ws_router
 async def lifespan(_: FastAPI):
     configure_logging("DEBUG" if settings.DEBUG else "INFO")
     await connect_to_mongo()
-    await connect_to_redis()
-    await connection_manager.start_pubsub()
     yield
-    await connection_manager.stop_pubsub()
-    await close_redis_connection()
     await close_mongo_connection()
 
 
@@ -69,21 +63,13 @@ def create_app() -> FastAPI:
 
     @app.get("/ready", tags=["system"])
     async def ready() -> dict:
-        checks = {"mongo": False, "redis": False}
+        ok = False
         try:
             await get_database().command("ping")
-            checks["mongo"] = True
+            ok = True
         except Exception:
             pass
-        redis = get_redis()
-        if redis is not None:
-            try:
-                await redis.ping()
-                checks["redis"] = True
-            except Exception:
-                pass
-        status = "ready" if checks["mongo"] else "degraded"
-        return {"status": status, "checks": checks}
+        return {"status": "ready" if ok else "degraded", "checks": {"mongo": ok}}
 
     return app
 

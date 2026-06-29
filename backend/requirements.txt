@@ -1,34 +1,23 @@
 # ---- Web framework ----
 fastapi>=0.115,<0.117
 uvicorn[standard]>=0.34,<0.40
-gunicorn>=23,<24
 python-multipart>=0.0.20
 
-# ---- Data / DB ----
+# ---- Database (MongoDB) ----
 motor>=3.6,<4
 pymongo>=4.9,<5
+
+# ---- Validation / settings ----
 pydantic>=2.11,<3
 pydantic-settings>=2.7,<3
 email-validator>=2.2
-
-# ---- Cache / realtime ----
-redis>=5.2,<6
 
 # ---- Auth / security ----
 python-jose[cryptography]>=3.3
 passlib[bcrypt]>=1.7.4
 bcrypt>=4.2,<5
 
-# ---- Storage / HTTP ----
-cloudinary>=1.42
-httpx>=0.28
-
-# ---- Utils ----
-python-dateutil>=2.9
-
-# ---- Dev / test ----
+# ---- Dev / test (optional) ----
 pytest>=8.3
 pytest-asyncio>=0.25
-mongomock-motor>=0.0.34
 ruff>=0.8
-mypy>=1.14
