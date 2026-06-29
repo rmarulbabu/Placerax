@@ -1,0 +1,3 @@
+# Local upload staging directory.
+# Files are streamed to Cloudinary when configured; this folder keeps the
+# path present in version control for local/dev fallbacks.
