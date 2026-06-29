@@ -40,6 +40,19 @@ function createApp() {
   app.use(timing);
 
   // System endpoints
+  app.get("/", (_req, res) => {
+    res.json({
+      app: settings.APP_NAME,
+      status: "ok",
+      message: "Placera API. See /health, /ready, and the versioned API below.",
+      endpoints: {
+        health: "/health",
+        ready: "/ready",
+        api: settings.API_V1_PREFIX,
+      },
+    });
+  });
+
   app.get("/health", (_req, res) => {
     res.json({ status: "ok", app: settings.APP_NAME });
   });
