@@ -41,6 +41,7 @@ coverage/
 # Vite build output
 frontend/dist/
 frontend/dev-dist/
+*.tsbuildinfo
 
 # ---------- Backend (Node.js) ----------
 # Runtime-uploaded files staged locally (keep the directory, ignore contents)

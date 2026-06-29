@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { WorkspaceLayout } from "@/components/layout/WorkspaceLayout";
 import { useAuthStore } from "@/store/authStore";
+import { useThemeStore } from "@/store/themeStore";
 
 import LandingPage from "@/pages/public/LandingPage";
 import LoginPage from "@/pages/auth/LoginPage";
@@ -26,9 +27,11 @@ import AdminQueues from "@/pages/admin/AdminQueues";
 
 export default function App() {
   const bootstrap = useAuthStore((s) => s.bootstrap);
+  const initTheme = useThemeStore((s) => s.init);
   useEffect(() => {
+    initTheme();
     bootstrap();
-  }, [bootstrap]);
+  }, [bootstrap, initTheme]);
 
   return (
     <Routes>

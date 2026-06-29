@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Bot, LogOut, Search, Settings, User as UserIcon } from "lucide-react";
 import { NotificationBell } from "./NotificationBell";
+import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +44,7 @@ export function Topbar() {
         <Button variant="secondary" size="icon" className="hidden sm:inline-flex" title="AI Assistant">
           <Bot className="size-[18px]" />
         </Button>
+        <ThemeToggle />
         <NotificationBell />
 
         <DropdownMenu>
