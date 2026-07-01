@@ -17,6 +17,8 @@ const companySchema = new Schema(
     size: { type: String, default: null },
     about: { type: String, default: null },
     locations: { type: [String], default: [] },
+    linkedin_url: { type: String, default: null },
+    hr_email: { type: String, default: null },
     approval_status: {
       type: String,
       enum: values(ApprovalStatus),

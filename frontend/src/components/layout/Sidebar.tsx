@@ -38,7 +38,7 @@ export function Sidebar() {
         {groups.map((group) => (
           <div key={group} className="space-y-1">
             {!sidebarCollapsed && (
-              <p className="px-3 pb-1 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
+              <p className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {group}
               </p>
             )}
@@ -53,8 +53,8 @@ export function Sidebar() {
                     cn(
                       "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all",
                       isActive
-                        ? "bg-gradient-brand/90 text-primary-foreground shadow-glow"
-                        : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",
+                        ? "bg-gradient-brand text-primary-foreground shadow-glow"
+                        : "text-foreground/70 hover:bg-surface-2 hover:text-foreground",
                       sidebarCollapsed && "justify-center px-0",
                     )
                   }
@@ -67,13 +67,6 @@ export function Sidebar() {
           </div>
         ))}
       </nav>
-
-      {!sidebarCollapsed && (
-        <div className="m-3 rounded-xl glass-2 p-3 text-xs text-muted-foreground">
-          <p className="font-medium text-foreground">Placera Pro</p>
-          <p className="mt-0.5">Unlock advanced analytics & AI tools.</p>
-        </div>
-      )}
     </motion.aside>
   );
 }

@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import type {
   AdminDashboard,
   Application,
+  Company,
   Job,
   NotificationItem,
   Paginated,
@@ -163,5 +164,13 @@ export function useRecommendedSkillGap() {
   return useMutation({
     mutationFn: async (target_skills: string[]) =>
       (await api.post("/ai/skill-gap", { target_skills })).data,
+  });
+}
+
+/* ----------------------------- Company ----------------------------- */
+export function useMyCompany() {
+  return useQuery({
+    queryKey: ["company", "mine"],
+    queryFn: async () => (await api.get<Company | null>("/companies/mine")).data,
   });
 }

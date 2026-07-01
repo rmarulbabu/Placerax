@@ -32,4 +32,40 @@ const me = asyncHandler(async (req, res) => {
   res.json(publicUser(req.user));
 });
 
-module.exports = { register, login, refresh, logout, me };
+const updateMe = asyncHandler(async (req, res) => {
+  const user = await authService.updateMe(req.user, req.body);
+  res.json(user);
+});
+
+const changePassword = asyncHandler(async (req, res) => {
+  await authService.changePassword(req.user, req.body.current_password, req.body.new_password);
+  res.json({ message: "Password updated." });
+});
+
+const updateSettings = asyncHandler(async (req, res) => {
+  const user = await authService.updateSettings(req.user, req.body);
+  res.json(user);
+});
+
+const listSessions = asyncHandler(async (req, res) => {
+  const sessions = await authService.listSessions(String(req.user.id));
+  res.json({ items: sessions });
+});
+
+const logoutAll = asyncHandler(async (req, res) => {
+  await authService.logoutAll(String(req.user.id));
+  res.json({ message: "Signed out of all devices." });
+});
+
+module.exports = {
+  register,
+  login,
+  refresh,
+  logout,
+  me,
+  updateMe,
+  changePassword,
+  updateSettings,
+  listSessions,
+  logoutAll,
+};

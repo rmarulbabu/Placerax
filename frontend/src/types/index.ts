@@ -1,5 +1,21 @@
 export type Role = "student" | "recruiter" | "admin";
 
+export interface NotificationSettings {
+  email: boolean;
+  application_updates: boolean;
+  interview_alerts: boolean;
+}
+
+export interface PrivacySettings {
+  profile_visibility: "public" | "recruiters" | "private";
+  portfolio_visibility: "public" | "private";
+}
+
+export interface UserSettings {
+  notifications: NotificationSettings;
+  privacy: PrivacySettings;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -10,6 +26,7 @@ export interface User {
   email_verified: boolean;
   onboarding_completed: boolean;
   company_id?: string | null;
+  settings?: UserSettings;
 }
 
 export interface TokenPair {
@@ -111,4 +128,102 @@ export interface Paginated<T> {
   limit: number;
   skip: number;
   has_more: boolean;
+}
+
+export interface Education {
+  institution: string;
+  degree: string;
+  field?: string | null;
+  start?: number | null;
+  end?: number | null;
+  cgpa?: number | null;
+}
+
+export interface StudentPreferences {
+  roles: string[];
+  locations: string[];
+  job_types: string[];
+}
+
+export interface StudentProfile {
+  id: string;
+  user_id: string;
+  headline?: string | null;
+  location?: string | null;
+  phone?: string | null;
+  about?: string | null;
+  education: Education[];
+  experience: unknown[];
+  skills: string[];
+  projects: unknown[];
+  links: Record<string, string>;
+  preferences: StudentPreferences;
+  profile_strength: number;
+  placement_readiness: number;
+  active_resume_id?: string | null;
+}
+
+export interface ResumeAnalysis {
+  score: number;
+  ats_score: number;
+  strengths: string[];
+  improvements: string[];
+  missing_keywords: string[];
+}
+
+export interface Resume {
+  id: string;
+  student_id: string;
+  file_url: string;
+  file_name: string;
+  analysis: ResumeAnalysis;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface PortfolioCategoryScores {
+  performance: number;
+  seo: number;
+  accessibility: number;
+  mobile: number;
+  ux: number;
+  project_quality: number;
+}
+
+export interface PortfolioAnalysis {
+  portfolio_url: string;
+  github_url?: string | null;
+  fetched: boolean;
+  overall_score: number;
+  categories: PortfolioCategoryScores;
+  strengths: string[];
+  weaknesses: string[];
+  recommendations: string[];
+  priority_fixes: string[];
+}
+
+export interface SessionInfo {
+  id: string;
+  user_agent?: string | null;
+  ip?: string | null;
+  created_at: string;
+  expires_at: string;
+}
+
+export interface Company {
+  id: string;
+  name: string;
+  slug: string;
+  logo_url?: string | null;
+  website?: string | null;
+  industry?: string | null;
+  size?: string | null;
+  about?: string | null;
+  locations: string[];
+  linkedin_url?: string | null;
+  hr_email?: string | null;
+  approval_status: string;
+  owner_id: string;
+  team: string[];
+  created_at?: string;
 }

@@ -13,9 +13,14 @@ const getCompany = asyncHandler(async (req, res) => {
   res.json(company.toJSON());
 });
 
+const myCompany = asyncHandler(async (req, res) => {
+  const company = await companyService.getMine(req.user);
+  res.json(company ? company.toJSON() : null);
+});
+
 const updateCompany = asyncHandler(async (req, res) => {
   const company = await companyService.update(req.params.company_id, req.body, req.user);
   res.json(company.toJSON());
 });
 
-module.exports = { createCompany, getCompany, updateCompany };
+module.exports = { createCompany, getCompany, myCompany, updateCompany };

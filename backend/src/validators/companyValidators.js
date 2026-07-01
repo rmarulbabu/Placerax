@@ -33,27 +33,35 @@ const preferencesSchema = Joi.object({
 
 const companyCreateSchema = Joi.object({
   name: Joi.string().min(2).max(120).required(),
-  website: Joi.string().allow(null, ""),
+  logo_url: Joi.string().uri().allow(null, ""),
+  website: Joi.string().uri().allow(null, ""),
   industry: Joi.string().allow(null, ""),
   size: Joi.string().allow(null, ""),
-  about: Joi.string().allow(null, ""),
+  about: Joi.string().allow(null, "").max(4000),
+  location: Joi.string().allow(null, ""),
   locations: Joi.array().items(Joi.string()).default([]),
+  linkedin_url: Joi.string().uri().allow(null, ""),
+  hr_email: Joi.string().email().allow(null, ""),
 });
 
 const companyUpdateSchema = Joi.object({
-  name: Joi.string(),
-  logo_url: Joi.string().allow(null, ""),
-  website: Joi.string().allow(null, ""),
+  name: Joi.string().min(2).max(120),
+  logo_url: Joi.string().uri().allow(null, ""),
+  website: Joi.string().uri().allow(null, ""),
   industry: Joi.string().allow(null, ""),
   size: Joi.string().allow(null, ""),
-  about: Joi.string().allow(null, ""),
+  about: Joi.string().allow(null, "").max(4000),
+  location: Joi.string().allow(null, ""),
   locations: Joi.array().items(Joi.string()),
+  linkedin_url: Joi.string().uri().allow(null, ""),
+  hr_email: Joi.string().email().allow(null, ""),
 });
 
 const studentProfileUpdateSchema = Joi.object({
   headline: Joi.string().allow(null, ""),
   location: Joi.string().allow(null, ""),
   phone: Joi.string().allow(null, ""),
+  about: Joi.string().allow(null, "").max(2000),
   education: Joi.array().items(educationSchema),
   experience: Joi.array().items(experienceSchema),
   skills: Joi.array().items(Joi.string()),

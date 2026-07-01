@@ -19,12 +19,6 @@ const schema = z.object({
 });
 type FormValues = z.infer<typeof schema>;
 
-const demo = [
-  { label: "Student", email: "ada@uni.edu", password: "Student@123" },
-  { label: "Recruiter", email: "recruiter@acme.ai", password: "Recruiter@123" },
-  { label: "Admin", email: "admin@placera.io", password: "Admin@12345" },
-];
-
 export default function LoginPage() {
   const login = useAuthStore((s) => s.login);
   const navigate = useNavigate();
@@ -32,7 +26,6 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
@@ -78,27 +71,6 @@ export default function LoginPage() {
           Sign in
         </Button>
       </form>
-
-      <div className="mt-6 rounded-xl glass-2 p-3">
-        <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-          Demo accounts (after seeding)
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {demo.map((d) => (
-            <button
-              key={d.label}
-              type="button"
-              onClick={() => {
-                setValue("email", d.email);
-                setValue("password", d.password);
-              }}
-              className="rounded-lg border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
-            >
-              {d.label}
-            </button>
-          ))}
-        </div>
-      </div>
     </AuthShell>
   );
 }

@@ -10,6 +10,8 @@ const { companyCreateSchema, companyUpdateSchema } = require("../validators/comp
 const router = express.Router();
 
 router.post("/", requireRole(Role.RECRUITER), validate(companyCreateSchema), ctrl.createCompany);
+// "mine" must be registered before the "/:slug" param route so it isn't shadowed.
+router.get("/mine", requireRole(Role.RECRUITER), ctrl.myCompany);
 router.get("/:slug", ctrl.getCompany);
 router.patch(
   "/:company_id",

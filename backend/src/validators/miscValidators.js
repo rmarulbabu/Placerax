@@ -13,6 +13,11 @@ const roadmapSchema = Joi.object({
   target_skills: Joi.array().items(Joi.string()).required(),
 });
 
+const portfolioAnalyzeSchema = Joi.object({
+  portfolio_url: Joi.string().uri({ scheme: ["http", "https"] }).required(),
+  github_url: Joi.string().uri({ scheme: ["http", "https"] }).allow(null, ""),
+});
+
 /* ---- Notifications ---- */
 const markReadSchema = Joi.object({
   ids: Joi.array().items(Joi.string()).allow(null),
@@ -32,6 +37,7 @@ const decisionSchema = Joi.object({
 module.exports = {
   skillGapSchema,
   roadmapSchema,
+  portfolioAnalyzeSchema,
   markReadSchema,
   statusUpdateSchema,
   decisionSchema,

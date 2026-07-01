@@ -20,10 +20,15 @@ import CareerToolsPage from "@/pages/student/CareerToolsPage";
 import RecruiterDashboard from "@/pages/recruiter/RecruiterDashboard";
 import RecruiterJobs from "@/pages/recruiter/RecruiterJobs";
 import CandidatesPage from "@/pages/recruiter/CandidatesPage";
+import CompanyWorkspacePage from "@/pages/recruiter/CompanyWorkspacePage";
 import RecruiterGeneric from "@/pages/recruiter/RecruiterGeneric";
 
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminQueues from "@/pages/admin/AdminQueues";
+
+import ProfilePage from "@/pages/account/ProfilePage";
+import SettingsPage from "@/pages/account/SettingsPage";
+import PortfolioAnalyzerPage from "@/pages/student/PortfolioAnalyzerPage";
 
 export default function App() {
   const bootstrap = useAuthStore((s) => s.bootstrap);
@@ -67,7 +72,7 @@ export default function App() {
           <Route path="/recruiter/candidates" element={<CandidatesPage />} />
           <Route path="/recruiter/interviews" element={<RecruiterGeneric title="Interviews" />} />
           <Route path="/recruiter/analytics" element={<RecruiterGeneric title="Hiring Analytics" />} />
-          <Route path="/recruiter/company" element={<RecruiterGeneric title="Company Workspace" />} />
+          <Route path="/recruiter/company" element={<CompanyWorkspacePage />} />
         </Route>
       </Route>
 
@@ -80,6 +85,15 @@ export default function App() {
           <Route path="/admin/companies" element={<AdminQueues view="companies" />} />
           <Route path="/admin/jobs" element={<AdminQueues view="jobs" />} />
           <Route path="/admin/settings" element={<AdminQueues view="settings" />} />
+        </Route>
+      </Route>
+
+      {/* Shared authenticated workspace (any role): profile, settings, AI tools */}
+      <Route element={<RequireAuth />}>
+        <Route element={<WorkspaceLayout />}>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/ai/portfolio-analyzer" element={<PortfolioAnalyzerPage />} />
         </Route>
       </Route>
 

@@ -17,6 +17,11 @@ function publicUser(user) {
     email_verified: user.email_verified,
     onboarding_completed: user.onboarding_completed,
     company_id: user.company_id ? String(user.company_id) : null,
+    settings: user.settings
+      ? typeof user.settings.toObject === "function"
+        ? user.settings.toObject()
+        : user.settings
+      : undefined,
   };
 }
 
