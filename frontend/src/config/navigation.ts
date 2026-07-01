@@ -5,6 +5,7 @@ import {
   Building2,
   CalendarClock,
   FileText,
+  Gauge,
   GraduationCap,
   LayoutDashboard,
   ListChecks,
@@ -35,6 +36,7 @@ const studentNav: NavItem[] = [
   { label: "Skill Gap", to: "/student/skill-gap", icon: Brain, group: "Career" },
   { label: "Career Roadmap", to: "/student/roadmap", icon: Map, group: "Career" },
   { label: "AI Assistant", to: "/student/assistant", icon: Bot, group: "Career" },
+  { label: "AI Portfolio Analyzer", to: "/ai/portfolio-analyzer", icon: Gauge, group: "Career" },
 ];
 
 const recruiterNav: NavItem[] = [

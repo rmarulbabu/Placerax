@@ -25,6 +25,10 @@ import RecruiterGeneric from "@/pages/recruiter/RecruiterGeneric";
 import AdminDashboard from "@/pages/admin/AdminDashboard";
 import AdminQueues from "@/pages/admin/AdminQueues";
 
+import ProfilePage from "@/pages/account/ProfilePage";
+import SettingsPage from "@/pages/account/SettingsPage";
+import PortfolioAnalyzerPage from "@/pages/student/PortfolioAnalyzerPage";
+
 export default function App() {
   const bootstrap = useAuthStore((s) => s.bootstrap);
   const initTheme = useThemeStore((s) => s.init);
@@ -80,6 +84,15 @@ export default function App() {
           <Route path="/admin/companies" element={<AdminQueues view="companies" />} />
           <Route path="/admin/jobs" element={<AdminQueues view="jobs" />} />
           <Route path="/admin/settings" element={<AdminQueues view="settings" />} />
+        </Route>
+      </Route>
+
+      {/* Shared authenticated workspace (any role): profile, settings, AI tools */}
+      <Route element={<RequireAuth />}>
+        <Route element={<WorkspaceLayout />}>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/ai/portfolio-analyzer" element={<PortfolioAnalyzerPage />} />
         </Route>
       </Route>
 
