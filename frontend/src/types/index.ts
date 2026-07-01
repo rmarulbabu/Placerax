@@ -209,3 +209,21 @@ export interface SessionInfo {
   created_at: string;
   expires_at: string;
 }
+
+export interface Company {
+  id: string;
+  name: string;
+  slug: string;
+  logo_url?: string | null;
+  website?: string | null;
+  industry?: string | null;
+  size?: string | null;
+  about?: string | null;
+  locations: string[];
+  linkedin_url?: string | null;
+  hr_email?: string | null;
+  approval_status: string;
+  owner_id: string;
+  team: string[];
+  created_at?: string;
+}

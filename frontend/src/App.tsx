@@ -20,6 +20,7 @@ import CareerToolsPage from "@/pages/student/CareerToolsPage";
 import RecruiterDashboard from "@/pages/recruiter/RecruiterDashboard";
 import RecruiterJobs from "@/pages/recruiter/RecruiterJobs";
 import CandidatesPage from "@/pages/recruiter/CandidatesPage";
+import CompanyWorkspacePage from "@/pages/recruiter/CompanyWorkspacePage";
 import RecruiterGeneric from "@/pages/recruiter/RecruiterGeneric";
 
 import AdminDashboard from "@/pages/admin/AdminDashboard";
@@ -71,7 +72,7 @@ export default function App() {
           <Route path="/recruiter/candidates" element={<CandidatesPage />} />
           <Route path="/recruiter/interviews" element={<RecruiterGeneric title="Interviews" />} />
           <Route path="/recruiter/analytics" element={<RecruiterGeneric title="Hiring Analytics" />} />
-          <Route path="/recruiter/company" element={<RecruiterGeneric title="Company Workspace" />} />
+          <Route path="/recruiter/company" element={<CompanyWorkspacePage />} />
         </Route>
       </Route>
 

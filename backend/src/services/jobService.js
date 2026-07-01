@@ -4,7 +4,7 @@
  * Mirrors app/services/job_service.py. */
 
 const { Job, Company, RecruiterProfile, StudentProfile } = require("../models");
-const { ApprovalStatus, JobStatus } = require("../models/enums");
+const { JobStatus } = require("../models/enums");
 const { uniqueSlug } = require("../utils/slug");
 const { Cache } = require("../config/redis");
 const aiEngine = require("../utils/aiEngine");
@@ -32,18 +32,18 @@ function buildJobQuery({
 }
 
 async function assertCanPost(recruiter) {
+  // Job creation only requires a linked, existing company workspace (self-serve).
+  let companyId = recruiter.company_id || null;
   const profile = await RecruiterProfile.findOne({ user_id: String(recruiter.id) });
-  if (!profile || !profile.company_id) {
-    throw new ValidationError("Create a company workspace before posting jobs.");
+  if (!companyId && profile && profile.company_id) companyId = profile.company_id;
+  if (!companyId) {
+    throw new ValidationError("You need to create a company profile before posting jobs.");
   }
-  if (!profile.verified) {
-    throw new ForbiddenError("Your recruiter account must be verified to post jobs.");
+  const company = await Company.findById(companyId);
+  if (!company) {
+    throw new ValidationError("You need to create a company profile before posting jobs.");
   }
-  const company = await Company.findById(profile.company_id);
-  if (!company || company.approval_status !== ApprovalStatus.APPROVED) {
-    throw new ForbiddenError("Your company must be approved before posting jobs.");
-  }
-  return profile.company_id;
+  return companyId;
 }
 
 async function create(data, recruiter) {
@@ -99,10 +99,10 @@ async function update(jobId, data, recruiter) {
 
 async function publish(jobId, recruiter) {
   await owned(jobId, recruiter);
-  // goes to moderation queue before being publicly listed
+  // Self-serve: publish directly so the job is immediately live in listings.
   return Job.findByIdAndUpdate(
     jobId,
-    { $set: { status: JobStatus.PENDING_MODERATION } },
+    { $set: { status: JobStatus.PUBLISHED } },
     { new: true }
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Briefcase, Loader2, Plus, Send, Users } from "lucide-react";
+import { Briefcase, Building2, Loader2, Plus, Send, Users } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/common/PageHeader";
 import { EmptyState } from "@/components/common/EmptyState";
@@ -19,6 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useMyCompany } from "@/api/hooks";
 import { api, apiErrorMessage } from "@/lib/api";
 import type { Job } from "@/types";
 
@@ -32,21 +33,53 @@ const statusVariant: Record<string, "muted" | "warning" | "success" | "danger"> 
 
 export default function RecruiterJobs() {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  const { data: company, isLoading: companyLoading } = useMyCompany();
+  const hasCompany = Boolean(company);
 
   const { data, isLoading } = useQuery({
     queryKey: ["jobs", "mine"],
     queryFn: async () => (await api.get<Job[]>("/jobs/manage/mine")).data,
+    enabled: hasCompany,
   });
 
   const publish = useMutation({
     mutationFn: (id: string) => api.post(`/jobs/${id}/publish`),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["jobs", "mine"] });
-      toast.success("Submitted for moderation.");
+      toast.success("Job published — now live in listings.");
     },
     onError: (e) => toast.error(apiErrorMessage(e)),
   });
+
+  // Gate: a company workspace is required before posting jobs.
+  if (!companyLoading && !hasCompany) {
+    return (
+      <>
+        <PageHeader
+          title="Jobs"
+          description="Post and manage your openings."
+          actions={
+            <Button onClick={() => navigate("/recruiter/company")}>
+              <Building2 className="size-4" /> Create Company Workspace
+            </Button>
+          }
+        />
+        <EmptyState
+          icon={Building2}
+          title="Create your company profile first"
+          description="You need to create a company profile before posting jobs."
+          action={
+            <Button onClick={() => navigate("/recruiter/company")}>
+              <Building2 className="size-4" /> Create Company Workspace
+            </Button>
+          }
+        />
+      </>
+    );
+  }
 
   return (
     <>
@@ -65,7 +98,7 @@ export default function RecruiterJobs() {
         }
       />
 
-      {isLoading ? (
+      {isLoading || companyLoading ? (
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
             <Skeleton key={i} className="h-20" />
@@ -114,6 +147,7 @@ export default function RecruiterJobs() {
 
 function JobWizard({ onDone }: { onDone: () => void }) {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [type, setType] = useState("internship");
   const [description, setDescription] = useState("");
@@ -136,7 +170,13 @@ function JobWizard({ onDone }: { onDone: () => void }) {
       toast.success("Job created as draft. Publish when ready.");
       onDone();
     } catch (err) {
-      toast.error(apiErrorMessage(err));
+      const message = apiErrorMessage(err);
+      toast.error(message);
+      // If the backend reports a missing company profile, guide the recruiter.
+      if (/company profile/i.test(message)) {
+        onDone();
+        navigate("/recruiter/company");
+      }
     } finally {
       setLoading(false);
     }
@@ -146,7 +186,7 @@ function JobWizard({ onDone }: { onDone: () => void }) {
     <DialogContent>
       <DialogHeader>
         <DialogTitle>Post a new job</DialogTitle>
-        <DialogDescription>Create a draft — it goes to moderation when you publish.</DialogDescription>
+        <DialogDescription>Create a draft — publish it to go live in listings.</DialogDescription>
       </DialogHeader>
       <div className="space-y-4">
         <div className="space-y-1.5">
