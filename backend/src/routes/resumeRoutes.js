@@ -6,7 +6,7 @@ const ctrl = require("../controllers/resumeController");
 const { requireRole } = require("../middleware/auth");
 const { validate } = require("../middleware/validate");
 const { Role } = require("../models/enums");
-const { skillGapSchema, roadmapSchema } = require("../validators/miscValidators");
+const { skillGapSchema, roadmapSchema, portfolioAnalyzeSchema } = require("../validators/miscValidators");
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -25,6 +25,12 @@ router.post("/resumes/:resume_id/analyze", requireRole(Role.STUDENT), ctrl.analy
 // AI career tools
 router.post("/ai/skill-gap", requireRole(Role.STUDENT), validate(skillGapSchema), ctrl.skillGap);
 router.post("/ai/roadmap", requireRole(Role.STUDENT), validate(roadmapSchema), ctrl.roadmap);
+router.post(
+  "/ai/portfolio-analyze",
+  requireRole(Role.STUDENT),
+  validate(portfolioAnalyzeSchema),
+  ctrl.analyzePortfolio
+);
 router.get("/ai/recommendations/jobs", requireRole(Role.STUDENT), ctrl.jobRecommendations);
 
 module.exports = router;

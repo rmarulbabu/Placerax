@@ -2,6 +2,7 @@
 
 const resumeService = require("../services/resumeService");
 const jobService = require("../services/jobService");
+const portfolioService = require("../services/portfolioService");
 const asyncHandler = require("../utils/asyncHandler");
 const { ValidationError } = require("../utils/errors");
 
@@ -59,6 +60,14 @@ const jobRecommendations = asyncHandler(async (req, res) => {
   res.json(result);
 });
 
+const analyzePortfolio = asyncHandler(async (req, res) => {
+  const result = await portfolioService.analyze({
+    portfolioUrl: req.body.portfolio_url,
+    githubUrl: req.body.github_url || null,
+  });
+  res.json(result);
+});
+
 module.exports = {
   uploadResume,
   listResumes,
@@ -68,4 +77,5 @@ module.exports = {
   skillGap,
   roadmap,
   jobRecommendations,
+  analyzePortfolio,
 };

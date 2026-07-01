@@ -11,6 +11,24 @@ const {
   values,
 } = require("./enums");
 
+/* ----------------------------- User settings ---------------------------- */
+const userSettingsSchema = new Schema(
+  {
+    notifications: {
+      email: { type: Boolean, default: true },
+      application_updates: { type: Boolean, default: true },
+      interview_alerts: { type: Boolean, default: true },
+    },
+    privacy: {
+      // public | recruiters | private
+      profile_visibility: { type: String, default: "recruiters" },
+      // public | private
+      portfolio_visibility: { type: String, default: "public" },
+    },
+  },
+  subSchemaOptions
+);
+
 /* --------------------------------- User --------------------------------- */
 const userSchema = new Schema(
   {
@@ -24,6 +42,7 @@ const userSchema = new Schema(
     onboarding_completed: { type: Boolean, default: false },
     company_id: { type: String, default: null },
     last_login_at: { type: Date, default: null },
+    settings: { type: userSettingsSchema, default: () => ({}) },
   },
   baseSchemaOptions()
 );
@@ -80,6 +99,7 @@ const studentProfileSchema = new Schema(
     headline: { type: String, default: null },
     location: { type: String, default: null },
     phone: { type: String, default: null },
+    about: { type: String, default: null },
     education: { type: [educationSchema], default: [] },
     experience: { type: [experienceSchema], default: [] },
     skills: { type: [String], default: [] },

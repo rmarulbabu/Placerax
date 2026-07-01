@@ -54,6 +54,7 @@ const studentProfileUpdateSchema = Joi.object({
   headline: Joi.string().allow(null, ""),
   location: Joi.string().allow(null, ""),
   phone: Joi.string().allow(null, ""),
+  about: Joi.string().allow(null, "").max(2000),
   education: Joi.array().items(educationSchema),
   experience: Joi.array().items(experienceSchema),
   skills: Joi.array().items(Joi.string()),

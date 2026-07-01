@@ -14,6 +14,7 @@ const {
 } = require("../utils/security");
 const { ConflictError, ForbiddenError, UnauthorizedError } = require("../utils/errors");
 const { publicUser } = require("../utils/serialize");
+const { Cache } = require("../config/redis");
 
 function tokenPair(accessToken, refreshToken) {
   return { access_token: accessToken, refresh_token: refreshToken, token_type: "bearer" };
@@ -101,4 +102,87 @@ async function logout(refreshToken) {
   }
 }
 
-module.exports = { register, login, refresh, logout, issueTokens, tokenPair };
+/** Update the current user's account fields (name, email, avatar). */
+async function updateMe(user, data) {
+  if (data.email && data.email.toLowerCase() !== user.email) {
+    const email = data.email.toLowerCase();
+    const existing = await User.findOne({ email });
+    if (existing && String(existing.id) !== String(user.id)) {
+      throw new ConflictError("That email is already in use.");
+    }
+    user.email = email;
+    user.email_verified = false;
+  }
+  if (data.full_name !== undefined) user.full_name = data.full_name;
+  if (data.avatar_url !== undefined) user.avatar_url = data.avatar_url;
+  await user.save();
+  await Cache.delete(`user:${String(user.id)}`);
+  return publicUser(user);
+}
+
+/** Change the current user's password after verifying the old one. */
+async function changePassword(user, currentPassword, newPassword) {
+  const fresh = await User.findById(user.id);
+  if (!fresh || !(await verifyPassword(currentPassword, fresh.password_hash))) {
+    throw new UnauthorizedError("Current password is incorrect.");
+  }
+  fresh.password_hash = await hashPassword(newPassword);
+  await fresh.save();
+  await Cache.delete(`user:${String(user.id)}`);
+}
+
+/** Merge notification/privacy preferences into the user's settings. */
+async function updateSettings(user, incoming) {
+  const fresh = await User.findById(user.id);
+  if (!fresh) throw new UnauthorizedError("User not found.");
+  const current = fresh.settings ? fresh.settings.toObject() : {};
+  const merged = {
+    notifications: { ...(current.notifications || {}), ...(incoming.notifications || {}) },
+    privacy: { ...(current.privacy || {}), ...(incoming.privacy || {}) },
+  };
+  fresh.settings = merged;
+  await fresh.save();
+  await Cache.delete(`user:${String(user.id)}`);
+  return publicUser(fresh);
+}
+
+/** List the user's active (non-revoked, non-expired) sessions. */
+async function listSessions(userId) {
+  const now = new Date();
+  const sessions = await Session.find({
+    user_id: userId,
+    revoked: false,
+    expires_at: { $gt: now },
+  })
+    .sort({ created_at: -1 })
+    .limit(50);
+  return sessions.map((s) => ({
+    id: String(s.id),
+    user_agent: s.user_agent ?? null,
+    ip: s.ip ?? null,
+    created_at: s.created_at,
+    expires_at: s.expires_at,
+  }));
+}
+
+/** Revoke every session for the user (logout on all devices). */
+async function logoutAll(userId) {
+  await Session.updateMany(
+    { user_id: userId, revoked: false },
+    { $set: { revoked: true } }
+  );
+}
+
+module.exports = {
+  register,
+  login,
+  refresh,
+  logout,
+  issueTokens,
+  tokenPair,
+  updateMe,
+  changePassword,
+  updateSettings,
+  listSessions,
+  logoutAll,
+};
